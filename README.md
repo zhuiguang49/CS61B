@@ -50,3 +50,33 @@ public static boolean checkvalue(int row,int col,Board b)
 
 ## Lab
 
+### lab 1
+
+没啥好说的
+
+### lab 2
+
+>环境配置有点麻烦
+
+#### Debugging
+
+`DebugExercis2` 文件里的 `arrayMax`、`arraySum` 两个函数的实现有些问题，Lab2 应该是希望我们不去深究其具体实现，而是发现有问题后完全替代其实现。可供参考的是，直接运行得到的结果应该是 17，修改完 `arrayMax` 后得到的结果应该是 71，完全修改正确后运行结果应是 15
+
+#### IntList 修复
+
+**`addConstant`方法：** 这个方法希望给链表的每个结点都加上常数 c，我们很容易发现实现的错误在于没给尾结点加上这个常数，这是因为 `while` 循环的判定条件 `head.rest != null` 在 `head` 为尾结点的时候结果为 `false`，无法进入循环，导致尾结点没有加常数，我们只需要改成 `while(head != null)` 即可
+
+**`setToZeroIfMaxFEL`方法:** 这里的错误实际上出在了 `firstDigitEqualsLastDigit` 函数中，具体在于
+```java
+while(x>10){
+    x=x/10;
+}
+```
+
+当 `x` 刚好为 `10` 时，不会执行 `x=x/10`，所以求出来的 `firstDigit` 为 0 而非正确的 1，最终发生了错误。
+
+**`squarePrimes`方法：**
+
+应该是最后 `return` 的递归调用有些问题，因为 `||` 的逻辑是短路的，我们 `return currElemIsPrime || SquarePrimes(lst.rest)`，如果 `currElemIsPrime` 为 `true`，由于短路逻辑就不会有后续的递归调用，导致并非所有素数都进行了平方操作。
+
+我个人不太喜欢递归地实现，就直接改成了迭代。
