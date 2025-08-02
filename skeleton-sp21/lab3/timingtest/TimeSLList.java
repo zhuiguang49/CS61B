@@ -23,6 +23,29 @@ public class TimeSLList {
 
     public static void timeGetLast() {
         // TODO: YOUR CODE HERE
+        // 用作 printTimingTable 参数的三个 AList
+        AList<Integer> N = new AList<>();
+        AList<Double> time = new AList<>();
+        AList<Integer> opcount = new AList<>();
+
+        int[] Narray = {1000,2000,4000,8000,16000,32000,64000,128000};
+        for(int n : Narray){
+            SLList<Integer> list = new SLList<>();
+            for(int i = 0; i < n; i++){
+                list.addLast(0);
+            }
+            int M = 10000;
+            opcount.addLast(M);
+            N.addLast(n);
+            Stopwatch sw = new Stopwatch();
+            for(int k = 0; k < M; k++){
+                list.getLast();
+            }
+            double timeInSeconds = sw.elapsedTime();
+            time.addLast(timeInSeconds);
+        }
+        printTimingTable(N,time,opcount);
+
     }
 
 }

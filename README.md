@@ -80,3 +80,40 @@ while(x>10){
 应该是最后 `return` 的递归调用有些问题，因为 `||` 的逻辑是短路的，我们 `return currElemIsPrime || SquarePrimes(lst.rest)`，如果 `currElemIsPrime` 为 `true`，由于短路逻辑就不会有后续的递归调用，导致并非所有素数都进行了平方操作。
 
 我个人不太喜欢递归地实现，就直接改成了迭代。
+
+### lab 3
+
+#### Timing Tests for List61B
+
+##### Timing the construction of an AList with a bad resize strategy
+
+主要是想让我们测试数据规模 `N` 的增长对 `addLast` 耗时的影响，`AList` 的实现中，`addLast` 的 `resize` 操作是在数组满了的时候创建一个比原数组大1的新数组，构建这样的大小为 `N` 的列表的时间复杂度为 $O(N^2)$，我们需要计时来验证这个性能问题。
+
+观察给出的 `printTimingTable` 函数我们可以知道，其接受三个参数，分别为 `AList<Integer>`、`AList<Double>`、`AList<Integer>`类型，分别对应数据规模 `N`，总耗时，存储操作次数。
+
+我们要做的就是针对不同的 `N`(1000,2000,...,128000) 来计算其总耗时、操作数等等，然后构建出 `printTimingTable` 函数参数所需要的三个 `AList`，难度不大；计时问题实验文档也给出了说明，可以参考 `StopwatchDemo` 中的实现。
+
+>需要说明的是，skeleton-sp21 仓库中并没有提供 `edu.princeton.cs.algs4.Stopwatch` 包，可以自行前往我的仓库的 `/skeleton-sp21/lab3` 目录下下载 `algs4.jar`，然后在 Intellij IDEA 中导入为库即可。
+
+##### Timing the construction of an AList with a good resize strategy
+
+更改一下 `resize` 策略，然后修改一下存放数据规模 `N` 的链表即可
+
+##### Timing the getLast method of SLList
+
+逻辑和 Timing Tests for List61B 差不多，只不过这时候 `N` 与 `ops` 不再相同，`ops` 代表的是我们进行 `getLast()` 的次数，这里我们固定为了 10000，而 `N` 仍然代表数据规模。
+
+#### Randomized Comparison Tests
+
+##### Simple Comparison Test
+
+有一说一我不太会写 JUnit test，最开始都没有用上 `@Test` 等注解，也没有用 `assertEquals` 这种断言的形式，而是自己写了几个不是 JUnit test 的函数用于判断，还好后面问 AI 确认了一下。这题逻辑是不难的，可能目的是想让我们熟悉一下 JUnit 的书写规范和格式。
+
+##### Adding Randomized Comparisons
+
+创建 `RandomizedTest.java` 文件，在给定的代码的基础上进行修改，给出的 `operationNumber` 为 2 的时候，调用 `getLast()` 方法，但是需要注意在 `size` 为 0 的时候要 `continue`；在给出的 `operationNumber` 为 3 的时候，调用 `removeLast()` 方法，但是需要注意在 `size` 为 0 的时候需要 `continue`
+
+后面的就没做了，感觉比较繁琐，难度也不太大
+
+
+
