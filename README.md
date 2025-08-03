@@ -48,6 +48,19 @@ public static boolean checkvalue(int row,int col,Board b)
 
 实现完视角朝北，对于其他值的 `side`，我们只需要仿照项目文档给出的，在最开始的时候设置 `board.setViewingPerspective(Side.blabla)`，然后在最后设置 `board.setViewingPerspective(Side.NORTH)` 即可
 
+### Project1:Data Structures
+
+#### checkPoint
+
+需要做两件事情，基于链表和数组分别实现双向队列。其中基于链表实现双向队列是比较常规的，我们只需要给链表节点配备两个指针 `prev` 和 `next`，然后注意一下 Deque 的 API 部分处理一下边界情况即可。
+
+着重说明一下基于数组实现双向队列，这点可以查看笔记网站里给出的一点[知识补充](https://note.zhuiguang.tech/CS/CS61B/Chapter2%20Lists/)。对于这样 `ArrayDeque`，我们需要提供这些变量：首先是底层的数组 `Item`，然后是当前已存储的 `size`，以及数组的容量 `capacity`，数组使用率 `ratio`，以及头索引 `first`，尾索引 `rear`。
+
+我们首先说明一下 `resize` 的逻辑，有两种情况需要进行 `resize`，首先是 `ratio == 1`，也即数组已满的情况下，这时候我们将 `capacity` 变为原来的两倍，然后通过 `System.arraycopy` 进行数组复制，但是需要注意的是，拷贝的逻辑我们需要对 `first`、`rear` 的位置进行分类，当 `first` 在 `rear` 之后时，我们首先拷贝 `first` 到 `capacity` 的部分；然后再拷贝 `0` 到 `rear` 的部分；而当 `first` 在 `rear` 之前时，常规拷贝即可。另一种情况是 `size >= 16` 且 `ratio < 0.25` 的时候，这时候将 `capacity` 变为原来的 $\frac{1}{2}$，拷贝的时候仍然对 `first` 和 `rear` 的位置关系分两类。
+
+接下来我们说明一下常规API，`printDeque`，和 `resize` 一样，对 `first`、`rear`分两类；而 `addFirst`、`addLast`、`removeFirst`、`removeLast` 的时候就需要注意一下循环数组的 `first`、`rear` 的变更逻辑。
+
+
 ## Lab
 
 ### lab 1
