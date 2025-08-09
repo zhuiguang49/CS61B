@@ -124,9 +124,13 @@ while(x>10){
 
 ##### Adding Randomized Comparisons
 
-创建 `RandomizedTest.java` 文件，在给定的代码的基础上进行修改，给出的 `operationNumber` 为 2 的时候，调用 `getLast()` 方法，但是需要注意在 `size` 为 0 的时候要 `continue`；在给出的 `operationNumber` 为 3 的时候，调用 `removeLast()` 方法，但是需要注意在 `size` 为 0 的时候需要 `continue`
+创建 `RandomizedTest.java` 文件，在给定的代码的基础上进行修改，给出的 `operationNumber` 为 2 的时候，调用 `getLast()` 方法，但是需要注意在 `size` 为 0 的时候要 `continue`；在给出的 `operationNumber` 为 3 的时候，调用 `removeLast()` 方法，但是需要注意在 `size` 为 0 的时候需要 `continue`，然后给 `BuggyAList` 也调用相同的方法，对有返回值的函数使用 `assertEquals` 进行测试即可
 
-后面的就没做了，感觉比较繁琐，难度也不太大
+##### BuggyAList 修复
+
+`BuggyAList` 的问题出在了 `removeLast` 方法中，因为数组需要缩小容量的时候，它调用了 `resize(size / 4)` ，所以最终导致 `resize` 方法拷贝元素的时候数组越界。修改一下将 `removeLast` 方法中 `resize` 的实际参数改为 `items.length / 4` 即可
+
+
 
 
 
