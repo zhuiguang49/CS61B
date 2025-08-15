@@ -60,6 +60,15 @@ public static boolean checkvalue(int row,int col,Board b)
 
 接下来我们说明一下常规API，`printDeque`，和 `resize` 一样，对 `first`、`rear`分两类；而 `addFirst`、`addLast`、`removeFirst`、`removeLast` 的时候就需要注意一下循环数组的 `first`、`rear` 的变更逻辑。
 
+然后对于 `equals`、`iterator()` 以及 `MaxArrayDeque` 等的实现需要对 `Iterable`、`Iterator`、`Comparable`、`Comparator` 等比较熟悉，我做的时候就有点懵懵懂懂，花了好久才大致搞明白，可以参考下我的笔记。
+
+
+#### Guitar String
+
+比较简单，不多说了
+
+
+
 
 ## Lab
 

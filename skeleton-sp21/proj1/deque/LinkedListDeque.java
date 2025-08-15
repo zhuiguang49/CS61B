@@ -1,18 +1,20 @@
 package deque;
 
-public class LinkedListDeque<T> {
-    public class ListNode<T>{
+import java.util.*;
+
+public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
+    private static class ListNode<T> {
         private T value;
         private ListNode<T> prev;
         private ListNode<T> next;
 
-        public ListNode(T x){
+        private ListNode(T x) {
             value = x;
             prev = null;
             next = null;
         }
 
-        public T getvalue(){
+        public T getvalue() {
             return value;
         }
     }
@@ -22,17 +24,19 @@ public class LinkedListDeque<T> {
     private ListNode<T> tail;
 
     // 构造函数，size 为 0，head 指针 和 tail 指针均置为 null
-    public LinkedListDeque(){
+    public LinkedListDeque() {
         size = 0;
         head = null;
         tail = null;
     }
-    public void addFirst(T item){
+
+    @Override
+    public void addFirst(T item) {
         ListNode<T> newnode = new ListNode<>(item);
-        if(head == null){
+        if (head == null) {
             head = newnode;
             tail = newnode;
-        }else{
+        } else {
             newnode.next = head;
             head.prev = newnode;
             newnode.prev = null;
@@ -41,12 +45,13 @@ public class LinkedListDeque<T> {
         size += 1;
     }
 
-    public void addLast(T item){
+    @Override
+    public void addLast(T item) {
         ListNode<T> newnode = new ListNode<>(item);
-        if(tail == null){
+        if (tail == null) {
             head = newnode;
             tail = newnode;
-        }else{
+        } else {
             newnode.prev = tail;
             newnode.next = null;
             tail.next = newnode;
@@ -55,20 +60,24 @@ public class LinkedListDeque<T> {
         size += 1;
     }
 
+    /* 接口已经提供默认实现
+    @Override
     public boolean isEmpty(){
         return size == 0;
     }
-
-    public int size(){
+    */
+    @Override
+    public int size() {
         return size;
     }
 
-    public void printDeque(){
+    @Override
+    public void printDeque() {
         ListNode<T> temp = head;
-        if(size() != 0){
+        if (size() != 0) {
             System.out.print(temp.getvalue());
             temp = temp.next;
-            while(temp != null){
+            while (temp != null) {
                 System.out.print(" " + temp.getvalue());
                 temp = temp.next;
             }
@@ -77,15 +86,16 @@ public class LinkedListDeque<T> {
         temp = null; // 这里是清除引用，以免仍然有指向某个节点的引用，导致后续回收机制失效
     }
 
-    public T removeFirst(){
-        if(size == 0){
+    @Override
+    public T removeFirst() {
+        if (size == 0) {
             return null;
         }
         T temp = head.getvalue();
-        if(size == 1){
+        if (size == 1) {
             head = null;
             tail = null;
-        }else {
+        } else {
             head = head.next;
             head.prev = null;
         }
@@ -94,16 +104,17 @@ public class LinkedListDeque<T> {
 
     }
 
-    public T removeLast(){
-        if(size == 0){
+    @Override
+    public T removeLast() {
+        if (size == 0) {
             return null;
         }
 
         T temp = tail.getvalue();
-        if(size == 1){
+        if (size == 1) {
             head = null;
             tail = null;
-        }else {
+        } else {
             tail = tail.prev;
             tail.next = null;
         }
@@ -111,12 +122,13 @@ public class LinkedListDeque<T> {
         return temp;
     }
 
-    public T get(int index){
-        if(index >= size || index < 0){
+    @Override
+    public T get(int index) {
+        if (index >= size || index < 0) {
             return null;
         }
         ListNode<T> temp = head;
-        for(int i = 0; i < index; i++){
+        for (int i = 0; i < index; i++) {
             temp = temp.next;
         }
         return temp.getvalue();
@@ -125,14 +137,14 @@ public class LinkedListDeque<T> {
     // 由于 getRecursive 函数只有 index 一个参数，我感觉比较难以用来实现递归，所以我选择将 getRecursive 函数作为递归的发起函数，但是实际
     // 主要的递归逻辑将在我下面的这个辅助函数中完成
 
-    private T getRecursiveHelper(ListNode<T> currentNode, int index){
-        if(currentNode == null){
+    private T getRecursiveHelper(ListNode<T> currentNode, int index) {
+        if (currentNode == null) {
             return null;
         }
-        if(index == 0){
+        if (index == 0) {
             return currentNode.getvalue();
-        }else{
-            return getRecursiveHelper(currentNode.next,index-1);
+        } else {
+            return getRecursiveHelper(currentNode.next, index - 1);
         }
     }
 
@@ -147,16 +159,59 @@ public class LinkedListDeque<T> {
         }
     }
 
-    // 这个返回迭代器的方法不太清楚咋写
-    /*
-    public Iterator<T> iterator(){
+    @Override
+    public Iterator<T> iterator() {
+        // LinkedListDeque 的基础是节点，所以我们直接用 this 指代当前节点，返回其迭代器
+        return new LinkedListDequeIterator();
+    }
+
+    private class LinkedListDequeIterator implements Iterator<T> {
+        private ListNode<T> current;
+
+        LinkedListDequeIterator() {
+            current = head;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return current != null;
+        }
+
+        @Override
+        public T next() {
+            if (this.hasNext()) {
+                T item = current.getvalue();
+                current = current.next;
+                return item;
+            } else {
+                return null;
+            }
+        }
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (!(other instanceof Deque)) {
+            return false;
+        }
+
+        Deque<T> that = (Deque<T>) other;
+
+        if (this.size != that.size()) {
+            return false;
+        }
+
+        for (int i = 0; i < this.size(); i++) {
+            T thisItem = this.get(i);
+            T thatItem = that.get(i);
+            if (!Objects.equals(thisItem, thatItem)) {
+                return false;
+            }
+        }
+        return true;
 
     }
-    */
-
-    // 这个暂时也还不太懂
-    /*
-    public boolean eaquals(Object o){
-
-    }*/
 }
